@@ -5,6 +5,8 @@ import numpy as np
 from model_definition import create_model, IMAGE_SIZE
 from keras.applications.mobilenetv2 import preprocess_input
 
+class_names = {0:'Dog', 1:'Cat'}
+
 WEIGHTS_FILE = "model-iou.h5"
 IMAGES = "images/*jpg"
 
@@ -28,10 +30,10 @@ def main():
         x1 = int((region[0] + region[2]) * image_width / IMAGE_SIZE)
         y1 = int((region[1] + region[3]) * image_height / IMAGE_SIZE)
 
-        class_id = np.argmax(class_id, axis=1)
+        class_id = np.argmax(class_id, axis=1)[0]
 
         cv2.rectangle(unscaled, (x0, y0), (x1, y1), (0, 0, 255), 1)
-        cv2.putText(unscaled, "class: {}".format(class_id[0]), (x0, y0), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2, cv2.LINE_AA)
+        cv2.putText(unscaled, "class: {}".format(class_names[class_id]), (x0, y0), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2, cv2.LINE_AA)
         cv2.imshow("image", unscaled)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
